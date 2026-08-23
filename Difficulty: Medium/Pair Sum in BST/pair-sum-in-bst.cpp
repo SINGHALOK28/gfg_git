@@ -12,30 +12,30 @@ class Node {
 
 class Solution {
   public:
-  vector<int>result;
-   void solve(Node* node){
-       if(node==NULL) return;
+  
+  
+  bool solve(Node* root, int target, unordered_map<int, int>& mp) {
 
-       solve(node->left);
-       result.push_back(node->data);
-       solve(node->right);
-       return;
-   }
+      if(root == NULL)
+          return false;
+
+      // Check karo required complement pehle mila hai ya nahi
+      int required = target - root->data;
+
+      if(mp.find(required) != mp.end())
+          return true;
+
+      // Current element store karo
+      mp[root->data]++;
+
+      // Left ya right subtree mein search
+      return solve(root->left, target, mp) ||
+             solve(root->right, target, mp);
+  }
   
     bool findTarget(Node *root, int target) {
         // code here.
-        solve(root);
-        int i=0, j=result.size()-1;
-        
-        while(i<j){
-            if(result[i]+result[j]==target) return true;
-            else if(result[i]+result[j]>target){
-                j--;
-            }
-            else if(result[i]+result[j]<target){
-                i++;
-            }
-        }
-      return false;
+        unordered_map<int, int> mp;
+        return solve(root, target, mp);
     }
 };
